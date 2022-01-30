@@ -1,0 +1,26 @@
+.App {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: 75% 25%;
+  grid-template-rows: 80% 20%;
+}
+
+.content {
+  background: rgba(30, 209, 209, 0.2);
+}
+
+.footer {
+  background: rgba(181, 196, 47, 0.2);
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 50% 50%;
+}
+
+.toaster {
+  background: rgba(81, 55, 223, 0.2);
+}
+
+.logger {
+  background: rgba(233, 64, 64, 0.2);
+  overflow: auto;
+}
