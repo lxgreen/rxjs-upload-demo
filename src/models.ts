@@ -16,6 +16,7 @@ export type Notification = {
 export interface NotificationService {
   info(message: string): void;
   error(message: string): void;
+  warn(message: string): void;
   reset(): void;
   reset$: Observable<void>;
   notificationAdded$: Observable<Notification>;

@@ -1,27 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { merge } from "rxjs";
 import { tap } from "rxjs/operators";
+import { Notification } from "../models";
 import { ServiceContext } from "../context/service-context";
 
-const Toaster = () => {
+const Toaster: FC = () => {
   const { logger, notifier } = useContext(ServiceContext);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const data$ = logger.messageLogged$.pipe(
+    const data$ = notifier.notificationAdded$.pipe(
       tap({
-        next: (message) => {
-          setData([
-            `[${new Date().toLocaleTimeString()}] ${message}`,
-            ...notifications
-          ]);
+        next: (notification: Notification) => {
+          setNotifications([notification, ...notifications]);
+          logger.log(`'${notification.level}' notification added`);
         }
       })
     );
-    const reset$ = logger.reset$.pipe(
+    const reset$ = notifier.reset$.pipe(
       tap({
         next: () => {
-          setData([]);
+          setNotifications([]);
+          logger.log("notifications reset");
         }
       })
     );
@@ -31,12 +31,18 @@ const Toaster = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [logger, data]);
+  }, [notifier, logger, notifications]);
 
-  return data.length > 0 ? (
-    data.map((d) => <div>{d}</div>)
-  ) : (
-    <div>-- empty log --</div>
+  return (
+    <>
+      {notifications.length > 0
+        ? notifications.map((d, i) => (
+            <div key={i} className={`toast ${d.level}`}>
+              {d.message}
+            </div>
+          ))
+        : null}
+    </>
   );
 };
 

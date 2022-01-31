@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import { merge } from "rxjs";
 import { tap } from "rxjs/operators";
 import { ServiceContext } from "../context/service-context";
 
-const LogViewer = () => {
+const LogViewer: FC = () => {
   const { logger } = useContext(ServiceContext);
   const [data, setData] = useState([]);
 
@@ -30,10 +30,14 @@ const LogViewer = () => {
     };
   }, [logger, data]);
 
-  return data.length > 0 ? (
-    data.map((d) => <div>{d}</div>)
-  ) : (
-    <div>-- empty log --</div>
+  return (
+    <>
+      {data.length > 0 ? (
+        data.map((d, i) => <div key={i}>{d}</div>)
+      ) : (
+        <div>-- empty log --</div>
+      )}
+    </>
   );
 };
 

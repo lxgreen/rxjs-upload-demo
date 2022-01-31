@@ -18,6 +18,10 @@ export default class Notifier implements NotificationService {
     this._notificationAdded$.next({ level: "info", message });
   }
 
+  public warn(message: string): void {
+    this._notificationAdded$.next({ level: "warn", message });
+  }
+
   public error(message: string): void {
     this._notificationAdded$.next({ level: "error", message });
   }
