@@ -13,7 +13,7 @@ const Toaster: FC = () => {
     const notifications$ = notifier.notificationAdded$.pipe(
       tap({
         next: (notification: Notification) => {
-          setNotifications([notification, ...notifications]);
+          setNotifications([...notifications, notification]);
           setTimeout(
             () => notifier.removeNotification(notification),
             notification.expiry * 1000

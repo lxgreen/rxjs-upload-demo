@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { tap } from "rxjs/operators";
 import LogViewer from "./components/LogViewer";
 import Toaster from "./components/Toaster";
 import { ServiceContext } from "./context/service-context";
@@ -19,7 +20,10 @@ const resetNotifier = (notifier: NotificationService) => () =>
   notifier.removeAll();
 
 export default function App() {
-  const { logger, notifier } = useContext(ServiceContext);
+  const { logger, notifier, uploader } = useContext(ServiceContext);
+  let counter = 0;
+  uploader.initializeStream();
+  uploader.uploadErrors$.pipe(tap((e) => notifier.error(e.message)));
   return (
     <div className="App">
       <div className="content" />
@@ -29,25 +33,33 @@ export default function App() {
       <div className="footer">
         <button
           key="log"
-          onClick={() => logTestMessage(logger)("TEST MESSAGE")}
+          onClick={() => logTestMessage(logger)(`TEST ${++counter}`)}
         >
           LOG TEST MESSAGE
         </button>
         <button key="resetLog" onClick={resetLog(logger)}>
           CLEAR LOG
         </button>
-        <button key="info" onClick={() => addInfo(notifier)("All's good man!")}>
+        <button
+          key="info"
+          onClick={() => addInfo(notifier)(`GOOD ${++counter}`)}
+        >
           INFO
         </button>
-        <button key="error" onClick={() => addError(notifier)("ERROR")}>
+        <button
+          key="error"
+          onClick={() => addError(notifier)(`ERROR ${++counter}`)}
+        >
           ERROR
         </button>
         <button key="resetNotify" onClick={resetNotifier(notifier)}>
           CLEAR NOTIFICATIONS
         </button>
-        <button key="uploadImage">NOOP</button>
-        <button key="failUploadImage">NOOP</button>
+        <button key="uploadImage" onClick={() => uploader.selectFiles()}>
+          UPLOAD
+        </button>
         <button key="addImageToContent">NOOP</button>
+        <button key="failUploadImage">NOOP</button>
       </div>
       <div className="logger">
         <LogViewer />

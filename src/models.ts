@@ -1,5 +1,6 @@
 import { ImageNode } from "ricos-content";
 import { Observable } from "rxjs";
+import { FileUpload, UploaderError } from "rxjs-uploader";
 
 export interface LogService {
   log(message: string): void;
@@ -27,7 +28,11 @@ export interface NotificationService {
 }
 
 export interface UploadService {
-  selectFiles(): File[];
+  selectFiles(): void;
+  cancelAll(): void;
+  initializeStream(): void;
+  fileUploads$: Observable<FileUpload[]>;
+  uploadErrors$: Observable<UploaderError>;
 }
 
 export interface ImageService {
