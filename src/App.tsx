@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { merge } from "rxjs";
 import { tap } from "rxjs/operators";
 import LogViewer from "./components/LogViewer";
 import Toaster from "./components/Toaster";
@@ -22,8 +23,20 @@ const resetNotifier = (notifier: NotificationService) => () =>
 export default function App() {
   const { logger, notifier, uploader } = useContext(ServiceContext);
   let counter = 0;
-  uploader.initializeStream();
-  uploader.uploadErrors$.pipe(tap((e) => notifier.error(e.message)));
+
+  useEffect(() => {
+    uploader.initializeStream();
+    const errors$ = uploader.uploadErrors$.pipe(
+      tap((e) => logger.log(`Upload error: ${e.message}`))
+    );
+
+    const subscription = merge(uploader.fileUploads$, errors$).subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  });
+
   return (
     <div className="App">
       <div className="content" />

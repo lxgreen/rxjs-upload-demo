@@ -18,10 +18,10 @@ export default class FileUploader implements UploadService {
       this.notifier.warn("too much files, max 3 at a time");
       this.logger.log("too much files, max 3 at a time");
     },
+    requestUrl: "https://www.mocky.io/v2/5185415ba171ea3a00704eed",
     requestOptions: (fileUpload) =>
       Promise.resolve({
-        url:
-          "https://www.mocky.io/v2/5185415ba171ea3a00704eed/" + fileUpload.name,
+        url: "https://www.mocky.io/v2/5185415ba171ea3a00704eed",
         headers: {
           "content-length": `${fileUpload.file.size}`
         }
@@ -74,7 +74,7 @@ export default class FileUploader implements UploadService {
   }
 
   public selectFiles(): void {
-    this.uploader.selectFiles();
+    this.hiddenFileInput.click();
   }
 
   public cancelAll() {

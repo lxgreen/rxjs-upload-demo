@@ -25,9 +25,7 @@
   border-radius: 10px;
   border: 1px solid rgb(48, 47, 47);
   padding: 10px;
-  white-space: nowrap;
   text-align: center;
-  color: white;
   margin: 10px;
   box-sizing: border-box;
   box-shadow: 5px 5px 5px rgb(100, 98, 98);
@@ -35,14 +33,17 @@
 
 .error {
   background: rgba(247, 4, 4, 0.637);
+  color: white;
 }
 
 .info {
   background: rgba(4, 247, 4, 0.637);
+  color: white;
 }
 
 .warn {
   background: rgba(247, 223, 4, 0.637);
+  color: black;
 }
 
 .logger {
