@@ -11,15 +11,19 @@ export interface LogService {
 export type Notification = {
   level: "error" | "info" | "warn";
   message: string;
+  expiry: number;
+  id: string;
 };
 
 export interface NotificationService {
   info(message: string): void;
   error(message: string): void;
   warn(message: string): void;
-  reset(): void;
-  reset$: Observable<void>;
+  removeAll(): void;
+  removeNotification(notification: Notification);
+  removeAll$: Observable<void>;
   notificationAdded$: Observable<Notification>;
+  notificationRemoved$: Observable<Notification>;
 }
 
 export interface UploadService {

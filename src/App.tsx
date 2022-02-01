@@ -15,7 +15,8 @@ const addInfo = (notifier: NotificationService) => (notification: string) =>
 const addError = (notifier: NotificationService) => (notification: string) =>
   notifier.error(notification);
 
-const resetNotifier = (notifier: NotificationService) => () => notifier.reset();
+const resetNotifier = (notifier: NotificationService) => () =>
+  notifier.removeAll();
 
 export default function App() {
   const { logger, notifier } = useContext(ServiceContext);
@@ -42,7 +43,7 @@ export default function App() {
           ERROR
         </button>
         <button key="resetNotify" onClick={resetNotifier(notifier)}>
-          RESET NOTIFICATIONS
+          CLEAR NOTIFICATIONS
         </button>
         <button key="uploadImage">NOOP</button>
         <button key="failUploadImage">NOOP</button>
