@@ -1,6 +1,13 @@
 import { Observable } from "rxjs";
-import { FileUpload, Uploader, UploaderError } from "rxjs-uploader";
+import {
+  FileUpload,
+  IUploadRequestOptions,
+  Uploader,
+  UploaderError
+} from "rxjs-uploader";
 import { LogService, NotificationService, UploadService } from "../models";
+
+const key = "5552fcb0c28873d48c9671855b70460e";
 
 // based on https://github.com/lsqlabs/rxjs-uploader#advanced-example-using-angular
 export default class FileUploader implements UploadService {
@@ -16,16 +23,19 @@ export default class FileUploader implements UploadService {
     uploadFileAsBody: false,
     onFileCountLimitExceeded: (fileCountLimit) => {
       this.notifier.warn("too much files, max 3 at a time");
-      this.logger.log("too much files, max 3 at a time");
     },
-    requestUrl: "https://www.mocky.io/v2/5185415ba171ea3a00704eed",
-    requestOptions: (fileUpload) =>
-      Promise.resolve({
-        url: "https://www.mocky.io/v2/5185415ba171ea3a00704eed",
+    requestOptions: async (fileUpload: FileUpload) => {
+      const formData = new FormData();
+      formData.append("image", fileUpload.name);
+      const requestOptions: IUploadRequestOptions = {
+        url: `https://api.imgbb.com/1/upload?expiration=600&key=${key}`,
         headers: {
           "content-length": `${fileUpload.file.size}`
-        }
-      }),
+        },
+        formData
+      };
+      return requestOptions;
+    },
     // optional step
     allFilesQueuedCallback: (fileUploads) => {
       return new Promise((resolve, reject) => {
@@ -37,23 +47,21 @@ export default class FileUploader implements UploadService {
       });
     },
     fileUploadedCallback: (fileUpload) => {
-      this.logger.log(fileUpload.name + " was uploaded");
+      this.notifier.info(fileUpload.name + " was uploaded");
+      console.log("response", fileUpload.responseBody);
       return fileUpload;
     },
     allFilesUploadedCallback: (fileUploads) => {
       this.notifier.info(fileUploads.length + " files were uploaded");
-      this.logger.log(fileUploads.length + " files were uploaded");
     },
     disallowedContentTypeErrorMessage: (file) => {
       const message = `${file.name} is an unsupported file type: ${file.type}`;
       this.notifier.warn(message);
-      this.logger.log(message);
       return message;
     },
     disallowedContentSizeErrorMessage: (file) => {
       const message = `${file.name} exceeds the limit (1MB)`;
       this.notifier.warn(message);
-      this.logger.log(message);
       return message;
     }
   });
@@ -64,13 +72,15 @@ export default class FileUploader implements UploadService {
   }
 
   // Stream API
-  public fileUploads$: Observable<FileUpload[]>;
-  public uploadErrors$: Observable<UploaderError>;
+  public fileUploadsStream: Observable<FileUpload[]>;
+  public uploadErrorStream: Observable<UploaderError>;
 
-  // should be called before usage
-  public initializeStream(): void {
-    this.fileUploads$ = this.uploader.streamFileUploads(this.hiddenFileInput);
-    this.uploadErrors$ = this.uploader.errorStream;
+  // should be called on DOM ready, before usage
+  public initializeStreams(): void {
+    this.fileUploadsStream = this.uploader.streamFileUploads(
+      this.hiddenFileInput
+    );
+    this.uploadErrorStream = this.uploader.errorStream;
   }
 
   public selectFiles(): void {

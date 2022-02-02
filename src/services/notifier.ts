@@ -15,9 +15,9 @@ export default class Notifier implements NotificationService {
   }
 
   // Stream APIs
-  public readonly removeAll$ = this._removeAll$.asObservable();
-  public readonly notificationAdded$ = this._notificationAdded$.asObservable();
-  public readonly notificationRemoved$ = this._notificationRemoved$.asObservable();
+  public readonly onRemoveAll = this._removeAll$.asObservable();
+  public readonly onNotificationAdded = this._notificationAdded$.asObservable();
+  public readonly onNotificationRemoved = this._notificationRemoved$.asObservable();
 
   // Method APIs
   public removeAll = () => {

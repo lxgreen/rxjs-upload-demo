@@ -8,14 +8,14 @@ const LogViewer: FC = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const data$ = logger.messageLogged$.pipe(
+    const messages$ = logger.onMessageLogged.pipe(
       tap({
         next: (message) => {
           setData([`[${new Date().toLocaleTimeString()}] ${message}`, ...data]);
         }
       })
     );
-    const reset$ = logger.reset$.pipe(
+    const reset$ = logger.onReset.pipe(
       tap({
         next: () => {
           setData([]);
@@ -23,7 +23,7 @@ const LogViewer: FC = () => {
       })
     );
 
-    const subscription = merge(data$, reset$).subscribe();
+    const subscription = merge(messages$, reset$).subscribe();
 
     return () => {
       subscription.unsubscribe();

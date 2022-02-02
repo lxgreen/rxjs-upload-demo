@@ -10,7 +10,7 @@ const Toaster: FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    const notifications$ = notifier.notificationAdded$.pipe(
+    const notifications$ = notifier.onNotificationAdded.pipe(
       tap({
         next: (notification: Notification) => {
           setNotifications([...notifications, notification]);
@@ -21,14 +21,14 @@ const Toaster: FC = () => {
         }
       })
     );
-    const reset$ = notifier.removeAll$.pipe(
+    const reset$ = notifier.onRemoveAll.pipe(
       tap({
         next: () => {
           setNotifications([]);
         }
       })
     );
-    const removed$ = notifier.notificationRemoved$.pipe(
+    const removed$ = notifier.onNotificationRemoved.pipe(
       tap({
         next: (notification) =>
           setNotifications(

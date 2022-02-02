@@ -6,8 +6,8 @@ class Logger implements LogService {
   private _messageLogged$ = new Subject<string>();
 
   // Stream APIs
-  public readonly reset$ = this._reset$.asObservable();
-  public readonly messageLogged$ = this._messageLogged$.asObservable();
+  public readonly onReset = this._reset$.asObservable();
+  public readonly onMessageLogged = this._messageLogged$.asObservable();
 
   // Method APIs
   public reset = () => {

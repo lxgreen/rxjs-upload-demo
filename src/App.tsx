@@ -25,12 +25,12 @@ export default function App() {
   let counter = 0;
 
   useEffect(() => {
-    uploader.initializeStream();
-    const errors$ = uploader.uploadErrors$.pipe(
+    uploader.initializeStreams();
+    const errors$ = uploader.uploadErrorStream.pipe(
       tap((e) => logger.log(`Upload error: ${e.message}`))
     );
 
-    const subscription = merge(uploader.fileUploads$, errors$).subscribe();
+    const subscription = merge(uploader.fileUploadsStream, errors$).subscribe();
 
     return () => {
       subscription.unsubscribe();

@@ -5,8 +5,8 @@ import { FileUpload, UploaderError } from "rxjs-uploader";
 export interface LogService {
   log(message: string): void;
   reset(): void;
-  messageLogged$: Observable<string>;
-  reset$: Observable<void>;
+  onMessageLogged: Observable<string>;
+  onReset: Observable<void>;
 }
 
 export type Notification = {
@@ -22,20 +22,20 @@ export interface NotificationService {
   warn(message: string): void;
   removeAll(): void;
   removeNotification(notification: Notification);
-  removeAll$: Observable<void>;
-  notificationAdded$: Observable<Notification>;
-  notificationRemoved$: Observable<Notification>;
+  onRemoveAll: Observable<void>;
+  onNotificationAdded: Observable<Notification>;
+  onNotificationRemoved: Observable<Notification>;
 }
 
 export interface UploadService {
   selectFiles(): void;
   cancelAll(): void;
-  initializeStream(): void;
-  fileUploads$: Observable<FileUpload[]>;
-  uploadErrors$: Observable<UploaderError>;
+  initializeStreams(): void;
+  fileUploadsStream: Observable<FileUpload[]>;
+  uploadErrorStream: Observable<UploaderError>;
 }
 
-export interface ImageService {
+export interface ImageContentService {
   addImage(data: ImageNode["imageData"]): void;
   updateImage(node: ImageNode): void;
   removeImage(node: ImageNode): void;
