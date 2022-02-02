@@ -1,4 +1,5 @@
 import { ImageNode } from "ricos-content";
+import { ImageData } from "ricos-schema";
 import { Observable } from "rxjs";
 import { FileUpload, UploaderError } from "rxjs-uploader";
 
@@ -35,8 +36,24 @@ export interface UploadService {
   uploadErrorStream: Observable<UploaderError>;
 }
 
+export type ImageUpload =
+  | {
+      status: "COMPLETE";
+      data: ImageData;
+    }
+  | {
+      status: "PROGRESS";
+      progress: number;
+    }
+  | {
+      status: "FAILED";
+    };
+
 export interface ImageContentService {
-  addImage(data: ImageNode["imageData"]): void;
+  addImage(data: ImageData): void;
   updateImage(node: ImageNode): void;
   removeImage(node: ImageNode): void;
+  onImageAdded: Observable<ImageNode>;
+  onImageUpdated: Observable<ImageNode>;
+  onImageRemoved: Observable<ImageNode>;
 }

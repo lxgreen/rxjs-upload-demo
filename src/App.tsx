@@ -39,7 +39,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <div className="content" />
+      <div className="content"></div>
       <div className="toaster">
         <Toaster />
       </div>

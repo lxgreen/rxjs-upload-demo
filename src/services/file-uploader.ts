@@ -28,7 +28,7 @@ export default class FileUploader implements UploadService {
       const formData = new FormData();
       formData.append("image", fileUpload.name);
       const requestOptions: IUploadRequestOptions = {
-        url: `https://api.imgbb.com/1/upload?expiration=600&key=${key}`,
+        url: `https://run.mocky.io/v3/04825bd6-734e-4219-a02a-0fb25fbfe8a8`,
         headers: {
           "content-length": `${fileUpload.file.size}`
         },
