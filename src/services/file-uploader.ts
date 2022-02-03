@@ -7,13 +7,11 @@ import {
 } from "rxjs-uploader";
 import { LogService, NotificationService, UploadService } from "../models";
 
-const key = "5552fcb0c28873d48c9671855b70460e";
-
 // based on https://github.com/lsqlabs/rxjs-uploader#advanced-example-using-angular
 export default class FileUploader implements UploadService {
   private notifier: NotificationService;
   private logger: LogService;
-  private hiddenFileInput = Uploader.createFileInputElement("multiple");
+  private hiddenFileInput: HTMLInputElement;
 
   // TODO: should be customizable
   private uploader = new Uploader({
@@ -77,10 +75,13 @@ export default class FileUploader implements UploadService {
 
   // should be called on DOM ready, before usage
   public initializeStreams(): void {
-    this.fileUploadsStream = this.uploader.streamFileUploads(
-      this.hiddenFileInput
-    );
-    this.uploadErrorStream = this.uploader.errorStream;
+    if (!this.hiddenFileInput) {
+      this.hiddenFileInput = Uploader.createFileInputElement("multiple");
+      this.fileUploadsStream = this.uploader.streamFileUploads(
+        this.hiddenFileInput
+      );
+      this.uploadErrorStream = this.uploader.errorStream;
+    }
   }
 
   public selectFiles(): void {

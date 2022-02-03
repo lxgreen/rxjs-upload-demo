@@ -6,7 +6,7 @@ import { ImageUpload } from "../models";
 import Image from "./Image";
 import { ImageData } from "ricos-schema";
 import { FileUpload } from "rxjs-uploader";
-import { pipe, flow } from "fp-ts/function";
+import { pipe, flow } from "fp-ts/lib/function";
 import * as A from "fp-ts/Array";
 
 const toImageData = (url: string): ImageData => ({
@@ -26,6 +26,7 @@ const ImageViewer: FC = () => {
   const [images, setImages] = useState<ImageUpload[]>([]);
 
   useEffect(() => {
+    uploader.initializeStreams();
     const images$ = uploader.fileUploadsStream.pipe(
       tap(flow(A.map(toImageUpload), setImages))
     );
@@ -35,7 +36,7 @@ const ImageViewer: FC = () => {
     return () => {
       subscription.unsubscribe();
     };
-  });
+  }, [images, uploader]);
 
   return (
     <>

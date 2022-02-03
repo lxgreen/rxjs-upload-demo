@@ -3,6 +3,7 @@ import { merge } from "rxjs";
 import { tap } from "rxjs/operators";
 import LogViewer from "./components/LogViewer";
 import Toaster from "./components/Toaster";
+import ImageViewer from "./components/ImageViewer";
 import { ServiceContext } from "./context/service-context";
 import { LogService, NotificationService } from "./models";
 import "./styles.css";
@@ -39,7 +40,9 @@ export default function App() {
 
   return (
     <div className="App">
-      <div className="content"></div>
+      <div className="content">
+        <ImageViewer />
+      </div>
       <div className="toaster">
         <Toaster />
       </div>
