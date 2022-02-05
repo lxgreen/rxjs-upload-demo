@@ -39,12 +39,10 @@ export default class NotificationComposer implements NotificationService {
         notifications.filter((n) => n.level === "error"),
         "error"
       );
-
       this.notifyBulk(
         notifications.filter((n) => n.level === "warn"),
         "warn"
       );
-
       this.notifyBulk(
         notifications.filter((n) => n.level === "info"),
         "info"

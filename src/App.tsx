@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, FC } from "react";
 import LogViewer from "./components/LogViewer";
 import Toaster from "./components/Toaster";
 import ImageViewer from "./components/ImageViewer";
@@ -19,7 +19,7 @@ const addError = (notifier: NotificationService) => (notification: string) =>
 const resetNotifier = (notifier: NotificationService) => () =>
   notifier.removeAll();
 
-export default function App() {
+export default function App(): FC {
   const { logger, notifier, uploader } = useContext(ServiceContext);
   let counter = 0;
 

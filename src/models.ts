@@ -1,4 +1,3 @@
-import { Monoid, struct } from "fp-ts/lib/Monoid";
 import { ImageNode } from "ricos-content";
 import { ImageData } from "ricos-schema";
 import { Observable } from "rxjs";
@@ -20,10 +19,10 @@ export type Notification = {
 
 export interface NotificationService {
   info(message: string): void;
-  error(message: string): void;
   warn(message: string): void;
+  error(message: string): void;
   removeAll(): void;
-  removeNotification(notification: Notification);
+  removeNotification(notification: Notification): void;
   onRemoveAll: Observable<void>;
   onNotificationAdded: Observable<Notification>;
   onNotificationRemoved: Observable<Notification>;
@@ -54,12 +53,3 @@ export type ImageUpload =
       data: ImageData;
       id: string;
     };
-
-export interface ImageContentService {
-  addImage(data: ImageData): void;
-  updateImage(node: ImageNode): void;
-  removeImage(node: ImageNode): void;
-  onImageAdded: Observable<ImageNode>;
-  onImageUpdated: Observable<ImageNode>;
-  onImageRemoved: Observable<ImageNode>;
-}
