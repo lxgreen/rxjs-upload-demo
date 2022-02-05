@@ -1,4 +1,3 @@
-import { ImageNode } from "ricos-content";
 import { ImageData } from "ricos-schema";
 import { Observable } from "rxjs";
 import { FileUpload, UploaderError } from "rxjs-uploader";
