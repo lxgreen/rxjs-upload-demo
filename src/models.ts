@@ -1,3 +1,4 @@
+import { Monoid, struct } from "fp-ts/lib/Monoid";
 import { ImageNode } from "ricos-content";
 import { ImageData } from "ricos-schema";
 import { Observable } from "rxjs";
@@ -30,23 +31,28 @@ export interface NotificationService {
 
 export interface UploadService {
   selectFiles(): void;
-  cancelAll(): void;
-  initializeStreams(): void;
+  removeAll(): void;
   fileUploadsStream: Observable<FileUpload[]>;
   uploadErrorStream: Observable<UploaderError>;
+  onRemoveAll: Observable<void>;
 }
 
 export type ImageUpload =
   | {
       status: "COMPLETE";
       data: ImageData;
+      id: string;
     }
   | {
       status: "PROGRESS";
       progress: number;
+      data: ImageData;
+      id: string;
     }
   | {
       status: "FAILED";
+      data: ImageData;
+      id: string;
     };
 
 export interface ImageContentService {

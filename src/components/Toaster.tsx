@@ -6,7 +6,7 @@ import { ServiceContext } from "../context/service-context";
 import Toast from "./Toast";
 
 const Toaster: FC = () => {
-  const { notifier } = useContext(ServiceContext);
+  const { notificationComposer: notifier } = useContext(ServiceContext);
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {

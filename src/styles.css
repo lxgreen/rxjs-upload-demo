@@ -1,12 +1,42 @@
 .App {
   display: grid;
   height: 100vh;
-  grid-template-columns: 800px auto;
+  grid-template-columns: 880px auto;
   grid-template-rows: 80% 20%;
 }
 
 .content {
   background: rgba(30, 209, 209, 0.2);
+  display: grid;
+  grid-template-columns: 200px 200px 200px 200px;
+  grid-template-rows: 120px 120px 120px 120px 120px;
+  column-gap: 20px;
+  row-gap: 20px;
+  padding: 10px;
+}
+
+.image {
+  width: 200px;
+  justify-self: center;
+  box-sizing: border-box;
+  justify-content: center;
+  display: flex;
+}
+
+.image img {
+  margin: auto;
+}
+
+.image.failed {
+  border: 2px solid red;
+}
+
+.image.progress {
+  border: 2px solid orange;
+}
+
+.image.complete {
+  border: 2px solid green;
 }
 
 .footer {

@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import {
   FileUpload,
   IUploadRequestOptions,
@@ -12,56 +12,42 @@ export default class FileUploader implements UploadService {
   private notifier: NotificationService;
   private logger: LogService;
   private hiddenFileInput: HTMLInputElement;
+  private _reset$ = new Subject<void>();
 
   // TODO: should be customizable
   private uploader = new Uploader({
     allowedContentTypes: ["image/jpeg", "image/png"],
-    fileCountLimit: 3,
-    fileSizeLimitMb: 1,
+    fileCountLimit: 12,
+    fileSizeLimitMb: 5,
     uploadFileAsBody: false,
     onFileCountLimitExceeded: (fileCountLimit) => {
-      this.notifier.warn("too much files, max 3 at a time");
+      this.notifier.warn(`too much files, max ${fileCountLimit} at a time`);
     },
     requestOptions: async (fileUpload: FileUpload) => {
       const formData = new FormData();
       formData.append("image", fileUpload.name);
       const requestOptions: IUploadRequestOptions = {
-        url: `https://run.mocky.io/v3/04825bd6-734e-4219-a02a-0fb25fbfe8a8`,
+        url: `https://run.mocky.io/v3/10b4731f-3915-4b70-b0ff-3c5c30bbd3d2`,
         headers: {
-          "content-length": `${fileUpload.file.size}`
+          "content-length": `${fileUpload.file.size}`,
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers":
+            "Origin, X-Requested-With, Content-Type, Accept"
         },
         formData
       };
       return requestOptions;
     },
     // optional step
-    allFilesQueuedCallback: (fileUploads) => {
-      return new Promise((resolve, reject) => {
-        // Simulating an HTTP call.
-        setTimeout(() => {
-          this.logger.log(fileUploads.length + " files are ready to upload");
-          resolve(fileUploads);
-        }, 100);
-      });
-    },
-    fileUploadedCallback: (fileUpload) => {
-      this.notifier.info(fileUpload.name + " was uploaded");
-      console.log("response", fileUpload.responseBody);
-      return fileUpload;
-    },
+    allFilesQueuedCallback: (fileUploads) =>
+      this.logger.log(fileUploads.length + " files are ready to upload"),
     allFilesUploadedCallback: (fileUploads) => {
       this.notifier.info(fileUploads.length + " files were uploaded");
     },
-    disallowedContentTypeErrorMessage: (file) => {
-      const message = `${file.name} is an unsupported file type: ${file.type}`;
-      this.notifier.warn(message);
-      return message;
-    },
-    disallowedContentSizeErrorMessage: (file) => {
-      const message = `${file.name} exceeds the limit (1MB)`;
-      this.notifier.warn(message);
-      return message;
-    }
+    disallowedContentTypeErrorMessage: (file) =>
+      `${file.name} is an unsupported file type: ${file.type}`,
+    disallowedContentSizeErrorMessage: (file) =>
+      `${file.name} exceeds the limit (5MB)`
   });
 
   constructor(notifier: NotificationService, logger: LogService) {
@@ -72,15 +58,23 @@ export default class FileUploader implements UploadService {
   // Stream API
   public fileUploadsStream: Observable<FileUpload[]>;
   public uploadErrorStream: Observable<UploaderError>;
+  public onRemoveAll = this._reset$.asObservable();
+  public isReady = false;
+  public onComplete = (fileUpload: FileUpload) => FileUpload;
 
   // should be called on DOM ready, before usage
-  public initializeStreams(): void {
-    if (!this.hiddenFileInput) {
+  public initializeStream(
+    onComplete: (fileUpload: FileUpload) => FileUpload
+  ): void {
+    if (!this.isReady) {
+      this.isReady = true;
       this.hiddenFileInput = Uploader.createFileInputElement("multiple");
       this.fileUploadsStream = this.uploader.streamFileUploads(
         this.hiddenFileInput
       );
       this.uploadErrorStream = this.uploader.errorStream;
+      this.uploader.setFileUploadedCallback(onComplete);
+      this.logger.log("uploader is ready for use");
     }
   }
 
@@ -88,7 +82,8 @@ export default class FileUploader implements UploadService {
     this.hiddenFileInput.click();
   }
 
-  public cancelAll() {
+  public removeAll() {
     this.uploader.clear();
+    this._reset$.next();
   }
 }

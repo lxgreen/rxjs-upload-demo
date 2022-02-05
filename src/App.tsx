@@ -1,6 +1,4 @@
-import React, { useContext, useEffect } from "react";
-import { merge } from "rxjs";
-import { tap } from "rxjs/operators";
+import React, { useContext } from "react";
 import LogViewer from "./components/LogViewer";
 import Toaster from "./components/Toaster";
 import ImageViewer from "./components/ImageViewer";
@@ -24,19 +22,6 @@ const resetNotifier = (notifier: NotificationService) => () =>
 export default function App() {
   const { logger, notifier, uploader } = useContext(ServiceContext);
   let counter = 0;
-
-  useEffect(() => {
-    uploader.initializeStreams();
-    const errors$ = uploader.uploadErrorStream.pipe(
-      tap((e) => logger.log(`Upload error: ${e.message}`))
-    );
-
-    const subscription = merge(uploader.fileUploadsStream, errors$).subscribe();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  });
 
   return (
     <div className="App">
@@ -72,9 +57,11 @@ export default function App() {
           CLEAR NOTIFICATIONS
         </button>
         <button key="uploadImage" onClick={() => uploader.selectFiles()}>
-          UPLOAD
+          UPLOAD IMAGES
         </button>
-        <button key="addImageToContent">NOOP</button>
+        <button key="cancelUploads" onClick={() => uploader.removeAll()}>
+          REMOVE IMAGES
+        </button>
         <button key="failUploadImage">NOOP</button>
       </div>
       <div className="logger">
