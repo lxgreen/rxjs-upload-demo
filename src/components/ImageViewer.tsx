@@ -57,7 +57,7 @@ const ImageViewer: FC = () => {
     );
 
     const errors$ = uploader.uploadErrorStream.pipe(
-      tap((e) => notifier.error(`Upload error: ${e.message}`))
+      tap((e: Error) => notifier.error(`Upload error: ${e.message}`))
     );
 
     const subscription = merge(errors$, cancellAll$).subscribe();

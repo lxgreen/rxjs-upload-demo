@@ -7,7 +7,6 @@ import {
 } from "rxjs-uploader";
 import { LogService, NotificationService, UploadService } from "../models";
 
-// based on https://github.com/lsqlabs/rxjs-uploader#advanced-example-using-angular
 export default class FileUploader implements UploadService {
   private notifier: NotificationService;
   private logger: LogService;
@@ -28,12 +27,6 @@ export default class FileUploader implements UploadService {
       formData.append("image", fileUpload.name);
       const requestOptions: IUploadRequestOptions = {
         url: `https://run.mocky.io/v3/10b4731f-3915-4b70-b0ff-3c5c30bbd3d2`,
-        headers: {
-          "content-length": `${fileUpload.file.size}`,
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Headers":
-            "Origin, X-Requested-With, Content-Type, Accept"
-        },
         formData
       };
       return requestOptions;

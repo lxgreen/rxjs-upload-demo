@@ -1,11 +1,11 @@
-import React, { useContext, FC } from "react";
+import React, { useContext } from "react";
 import LogViewer from "./components/LogViewer";
 import Toaster from "./components/Toaster";
 import ImageViewer from "./components/ImageViewer";
 import { ServiceContext } from "./context/service-context";
 import "./styles.css";
 
-export default function App(): FC {
+export default function App() {
   const { logger, notifier, uploader } = useContext(ServiceContext);
   let counter = 0;
 
